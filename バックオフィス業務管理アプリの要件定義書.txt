@@ -1,0 +1,244 @@
+# バックオフィス業務管理アプリの要件定義書
+
+## ゴール: バックオフィス業務を一元管理し、業務の効率化と情報の集約を図る
+
+## 1. 目的
+
+本システムは、企業のバックオフィス業務を一元管理し、業務の効率化と情報の集約を図ることを目的とする。法務、人事、総務、事業、経理の各部門の業務フローを可視化し、部門間の情報共有と連携を促進する。また、マーケティング活動、人事業務、経理業務の管理を一元化することで、業務の効率化と意思決定の迅速化を実現する。
+
+## 2. ファイル・フォルダ構成
+
+```
+backoffice-app/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── company/
+│   │   │           └── backoffice/
+│   │   │               ├── controller/
+│   │   │               │   ├── DepartmentController.java
+│   │   │               │   ├── MarketingController.java
+│   │   │               │   ├── HumanResourcesController.java
+│   │   │               │   └── AccountingController.java
+│   │   │               ├── service/
+│   │   │               │   ├── DepartmentService.java
+│   │   │               │   ├── MarketingService.java
+│   │   │               │   ├── HumanResourcesService.java
+│   │   │               │   └── AccountingService.java
+│   │   │               ├── repository/
+│   │   │               │   ├── DepartmentRepository.java
+│   │   │               │   ├── MarketingRepository.java
+│   │   │               │   ├── HumanResourcesRepository.java
+│   │   │               │   └── AccountingRepository.java
+│   │   │               ├── model/
+│   │   │               │   ├── Department.java
+│   │   │               │   ├── Marketing.java
+│   │   │               │   ├── HumanResources.java
+│   │   │               │   └── Accounting.java
+│   │   │               └── BackofficeApplication.java
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       └── templates/
+│   │           ├── index.html
+│   │           ├── departments.html
+│   │           ├── marketing.html
+│   │           ├── humanresources.html
+│   │           └── accounting.html
+│   └── test/
+│       └── java/
+│           └── com/
+│               └── company/
+│                   └── backoffice/
+│                       ├── controller/
+│                       │   ├── DepartmentControllerTest.java
+│                       │   ├── MarketingControllerTest.java
+│                       │   ├── HumanResourcesControllerTest.java
+│                       │   └── AccountingControllerTest.java
+│                       ├── service/
+│                       │   ├── DepartmentServiceTest.java
+│                       │   ├── MarketingServiceTest.java
+│                       │   ├── HumanResourcesServiceTest.java
+│                       │   └── AccountingServiceTest.java
+│                       └── BackofficeApplicationTests.java
+├── .gitignore
+├── README.md
+├── build.gradle
+└── gradlew
+```
+
+## 3. クラス図
+
+```
+       +-----------------+
+       |    Department   |
+       +-----------------+
+       | -id: Long       |
+       | -name: String   |
+       +-----------------+
+       | +getId(): Long  |
+       | +setId(Long)    |
+       | +getName(): String |
+       | +setName(String)|
+       +-----------------+
+                 ^
+                 |
+        +--------+--------+
+        |                 |
++-----------------+  +-----------------+
+|    Marketing    |  |   Accounting    |
++-----------------+  +-----------------+
+| -id: Long       |  | -id: Long       |
+| -campaign: String|  | -transaction: String|
++-----------------+  +-----------------+
+| +getId(): Long  |  | +getId(): Long  |
+| +setId(Long)    |  | +setId(Long)    |
+| +getCampaign(): String| +getTransaction(): String|
+| +setCampaign(String)| +setTransaction(String)|
++-----------------+  +-----------------+
+
+       +-----------------+
+       | HumanResources  |
+       +-----------------+
+       | -id: Long       |
+       | -employee: String|
+       +-----------------+
+       | +getId(): Long  |
+       | +setId(Long)    |
+       | +getEmployee(): String|
+       | +setEmployee(String)|
+       +-----------------+
+```
+
+## 4. クラスの詳細
+
+### Department クラス
+
+- 説明: 部門を表すクラス
+- 属性:
+  - id (Long): 部門ID
+  - name (String): 部門名
+- 操作:
+  - getId(): Long - 部門IDを取得する
+  - setId(Long): void - 部門IDを設定する
+  - getName(): String - 部門名を取得する
+  - setName(String): void - 部門名を設定する
+
+### Marketing クラス
+
+- 説明: マーケティング部門を表すクラス。Department クラスを継承する。
+- 属性:
+  - campaign (String): キャンペーン名
+- 操作:
+  - getCampaign(): String - キャンペーン名を取得する
+  - setCampaign(String): void - キャンペーン名を設定する
+
+### Accounting クラス
+
+- 説明: 経理部門を表すクラス。Department クラスを継承する。
+- 属性:
+  - transaction (String): 取引名
+- 操作:
+  - getTransaction(): String - 取引名を取得する
+  - setTransaction(String): void - 取引名を設定する
+
+### HumanResources クラス
+
+- 説明: 人事部門を表すクラス。Department クラスを継承する。
+- 属性:
+  - employee (String): 従業員名
+- 操作:
+  - getEmployee(): String - 従業員名を取得する
+  - setEmployee(String): void - 従業員名を設定する
+
+## 4. ユースケース
+
+1. 部門管理
+   - 関連クラス: DepartmentController, DepartmentService, DepartmentRepository, Department
+   - 主要メソッド:
+     - DepartmentController.createDepartment()
+     - DepartmentController.updateDepartment()
+     - DepartmentController.deleteDepartment()
+     - DepartmentService.findAllDepartments()
+
+2. マーケティング管理
+   - 関連クラス: MarketingController, MarketingService, MarketingRepository, Marketing
+   - 主要メソッド:
+     - MarketingController.createCampaign()
+     - MarketingController.updateCampaign()
+     - MarketingController.deleteCampaign()
+     - MarketingService.findAllCampaigns()
+
+3. 経理管理
+   - 関連クラス: AccountingController, AccountingService, AccountingRepository, Accounting
+   - 主要メソッド:
+     - AccountingController.createTransaction()
+     - AccountingController.updateTransaction()
+     - AccountingController.deleteTransaction()
+     - AccountingService.findAllTransactions()
+
+4. 人事管理
+   - 関連クラス: HumanResourcesController, HumanResourcesService, HumanResourcesRepository, HumanResources
+   - 主要メソッド:
+     - HumanResourcesController.createEmployee()
+     - HumanResourcesController.updateEmployee()
+     - HumanResourcesController.deleteEmployee()
+     - HumanResourcesService.findAllEmployees()
+
+## 5. シーケンス図
+
+### 部門作成のシーケンス
+
+```
+User -> DepartmentController: createDepartment()
+DepartmentController -> DepartmentService: createDepartment()
+DepartmentService -> DepartmentRepository: save()
+DepartmentRepository -> Department: new()
+Department --> DepartmentRepository: 
+DepartmentRepository --> DepartmentService: 
+DepartmentService --> DepartmentController: 
+DepartmentController --> User: 
+```
+
+### マーケティングキャンペーン作成のシーケンス
+
+```
+User -> MarketingController: createCampaign()
+MarketingController -> MarketingService: createCampaign()
+MarketingService -> MarketingRepository: save()
+MarketingRepository -> Marketing: new()
+Marketing --> MarketingRepository: 
+MarketingRepository --> MarketingService: 
+MarketingService --> MarketingController: 
+MarketingController --> User: 
+```
+
+### 経理取引作成のシーケンス
+
+```
+User -> AccountingController: createTransaction()
+AccountingController -> AccountingService: createTransaction()
+AccountingService -> AccountingRepository: save()
+AccountingRepository -> Accounting: new()
+Accounting --> AccountingRepository: 
+AccountingRepository --> AccountingService: 
+AccountingService --> AccountingController: 
+AccountingController --> User: 
+```
+
+### 人事従業員作成のシーケンス
+
+```
+User -> HumanResourcesController: createEmployee()
+HumanResourcesController -> HumanResourcesService: createEmployee()
+HumanResourcesService -> HumanResourcesRepository: save()
+HumanResourcesRepository -> HumanResources: new()
+HumanResources --> HumanResourcesRepository: 
+HumanResourcesRepository --> HumanResourcesService: 
+HumanResourcesService --> HumanResourcesController: 
+HumanResourcesController --> User: 
+```
+
+本設計では、オブジェクト指向の原則に従い、各部門の責務を明確に分離しています。Department を基底クラスとし、Marketing、Accounting、HumanResources がそれを継承することで、コードの再利用性を高めています。また、Controller、Service、Repository の各層を設け、関心事の分離を実現しています。
+
+今後の拡張として、各部門の業務をさらに細分化したクラスを追加することや、新たな部門を追加することが容易である設計となっています。また、必要に応じて、デザインパターンを適用することで、より柔軟で保守性の高いシステムを実現することができます。
